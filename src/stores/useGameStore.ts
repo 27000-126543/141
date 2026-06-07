@@ -98,14 +98,27 @@ export const useGameStore = create<GameState>((set, get) => ({
   login: async (username: string, password: string) => {
     set({ isLoading: true, error: null });
     try {
-      await new Promise(resolve => setTimeout(resolve, 800));
-      const player = { ...mockPlayer, username };
-      const team = { ...mockTeam };
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || '登录失败');
+      }
+
+      const data = await response.json();
+      const { token, player } = data;
+
+      localStorage.setItem('auth_token', token);
+
       const inventory = mockStolenData.filter(d => d.ownerId === player.id);
 
       set({
         player,
-        team,
+        team: mockTeam,
         hackTargets: mockHackTargets,
         marketOrders: mockMarketOrders,
         playerInventory: inventory,
@@ -116,7 +129,10 @@ export const useGameStore = create<GameState>((set, get) => ({
       });
       return true;
     } catch (error) {
-      set({ error: '登录失败，请检查用户名和密码', isLoading: false });
+      set({
+        error: error instanceof Error ? error.message : '登录失败，请检查用户名和密码',
+        isLoading: false,
+      });
       return false;
     }
   },
@@ -124,22 +140,34 @@ export const useGameStore = create<GameState>((set, get) => ({
   register: async (username: string, password: string) => {
     set({ isLoading: true, error: null });
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const newPlayer: Player = {
-        id: `player-${Date.now()}`,
-        username,
-        avatar: `https://api.dicebear.com/7.x/pixel-art/svg?seed=${username}`,
-        skills: { cracking: 10, programming: 10, stealth: 10 },
-        reputation: 0,
-        credits: 1000,
-        teamId: null,
-        teamRole: null,
-        createdAt: new Date().toISOString(),
-      };
-      set({ player: newPlayer, isAuthenticated: true, isLoading: false, hackTargets: mockHackTargets });
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, confirmPassword: password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || '注册失败');
+      }
+
+      const data = await response.json();
+      const { token, player } = data;
+
+      localStorage.setItem('auth_token', token);
+
+      set({
+        player,
+        isAuthenticated: true,
+        isLoading: false,
+        hackTargets: mockHackTargets,
+      });
       return true;
     } catch (error) {
-      set({ error: '注册失败，用户名可能已存在', isLoading: false });
+      set({
+        error: error instanceof Error ? error.message : '注册失败，用户名可能已存在',
+        isLoading: false,
+      });
       return false;
     }
   },
