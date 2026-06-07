@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a0f" />
+    <meta name="description" content="赛博骇客战争 - 沉浸式赛博朋克风格黑客团队对抗游戏。组建你的黑客团队，执行高风险入侵任务，在暗网数据市场交易，参与全球数据风暴！" />
+    <meta name="keywords" content="赛博朋克,黑客,网络游戏,团队对抗,数据风暴,暗网市场,Cyber Hack War" />
+    <meta name="author" content="Cyber Hack War" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="赛博骇客战争 - Cyber Hack War" />
+    <meta property="og:description" content="沉浸式赛博朋克风格黑客团队对抗游戏，体验未来数字世界的生存法则。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:theme-color" content="#00f5ff" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="赛博骇客战争 - Cyber Hack War" />
+    <meta name="twitter:description" content="在霓虹闪烁的赛博世界中，成为最强黑客团队！" />
+    <title>赛博骇客战争 - Cyber Hack War</title>
+    <script type="module">
+      if (import.meta.hot?.on) {
+        import.meta.hot.on('vite:error', (error) => {
+          if (error.err) {
+            console.error(
+              [error.err.message, error.err.frame].filter(Boolean).join('\n'),
+            )
+          }
+        })
+      }
+    </script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #0a0a0f;
+        color-scheme: dark;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
